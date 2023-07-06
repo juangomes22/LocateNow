@@ -17,6 +17,14 @@
     "react": "18.2.0",
     "react-native": "0.71.8",
     "react-native-maps": "^1.7.1",
+<<<<<<< HEAD
+=======
+    "expo-camera": "~13.2.1",
+    "expo-sensors": "~12.1.1",
+    "expo-image-picker": "~14.1.1",
+    "expo-permissions": "~14.1.1",
+    "expo-image": "~1.0.1",
+>>>>>>> 907f052fcc676de1882bc2c85c42582e77bb0848
     "expo-media-library": "~15.2.3"
   },
   "devDependencies": {

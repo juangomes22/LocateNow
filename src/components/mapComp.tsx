@@ -1,5 +1,3 @@
-
-
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
