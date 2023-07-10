@@ -3,7 +3,7 @@ import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
 import { Camera } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 
-export default function MapComp() {
+export default function CameraComp() {
     const [hasPermission, setHasPermission] = useState<boolean | null>(null);
     const cameraRef = useRef<Camera | null>(null);
 
