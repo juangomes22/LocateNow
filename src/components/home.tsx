@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity, StyleSheet, View } from "react-native";
-import MapView, { Marker } from "react-native-maps";
 import { Entypo } from '@expo/vector-icons';
-import TouristSpotEntity from "../entities/tourist_spot_entity";
-import { Image } from "expo-image"
 import ModalComp from "./modalComp";
+import MapComp from "./mapComp";
 
 export default function Home({ navigation }) {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(true);
   const [selectedSpot, setSelectedSpot] = useState(null);
   const [initialRegion, setInitialRegion] = useState(null);
   const [showInitialLocation, setShowInitialLocation] = useState(true);
@@ -17,9 +15,9 @@ export default function Home({ navigation }) {
       setShowInitialLocation(false);
       setInitialRegion({
         latitude: -22.1184, // Latitude de Três Rios
-        longitude: -43.2187, // Longitude de Três Rios
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        longitude: -43.2100, // Longitude de Três Rios
+        latitudeDelta: 0.0150,
+        longitudeDelta: 0.00100,
       });
     }, 4000);
 
@@ -41,35 +39,7 @@ export default function Home({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <MapView style={styles.map} region={initialRegion}>
-        {showInitialLocation && initialRegion &&(
-          <Marker
-            coordinate={{
-              latitude: initialRegion.latitude,
-              longitude: initialRegion.longitude,
-            }}
-            title="Initial Location"
-          />
-        )}
-
-        {TouristSpotEntity.map((spot, index) => (
-          <Marker
-            key={index}
-            coordinate={{ latitude: spot.latitude, longitude: spot.longitude }}
-            title={spot.nome}
-            onPress={() => handleMarkerPress(spot)}
-          >
-            <View style={styles.markerContainer}>
-              <TouchableOpacity onPress={openModal}>
-              <Image
-                source={spot.imagem}
-                style={styles.markerImage}
-              />
-              </TouchableOpacity>
-            </View>
-          </Marker>
-        ))}
-      </MapView>
+      <MapComp initialRegion={initialRegion} showInitialLocation={showInitialLocation} handleMarkerPress={handleMarkerPress} openModal={()=>{openModal()}} />
 
       {selectedSpot && (
         <ModalComp closeModal={closeModal} selected={selectedSpot} modalVisible={modalVisible}
@@ -77,7 +47,7 @@ export default function Home({ navigation }) {
       )}
 
       <TouchableOpacity style={styles.cameraButton} onPress={() => navigation.navigate('Camera')}>
-        <Entypo name="camera" size={24} color="black" />
+        <Entypo name="camera" size={30} color="black" />
       </TouchableOpacity>
     </View>
   );
@@ -92,29 +62,16 @@ const styles = StyleSheet.create({
   },
   cameraButton: {
     position: 'absolute',
-    bottom: 60,
-    right: 20,
-    backgroundColor: "transparent",
-    width: 60,
-    height: 60,
+    bottom: 80,
+    right: 15,
+    backgroundColor: "#2196F3",
+    width: 80,
+    height: 80,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 30,
+    borderRadius: 40,
     borderColor: '#212121',
-    borderWidth: 1,
-  },
-  infoButton: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-    backgroundColor: "transparent",
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 20,
-    borderColor: '#212121',
-    borderWidth: 1,
+    borderWidth: 3,
   },
   markerContainer: {
     width: 50,
@@ -126,5 +83,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
+    borderWidth:6,
+    borderColor:''
   },
 });

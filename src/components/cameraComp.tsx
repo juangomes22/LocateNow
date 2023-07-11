@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
 import { Camera } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
+import { Entypo } from '@expo/vector-icons';
+
 
 export default function CameraComp() {
     const [hasPermission, setHasPermission] = useState<boolean | null>(null);
@@ -47,9 +49,11 @@ export default function CameraComp() {
                 style={styles.camera}
                 ref={(ref: Camera) => (cameraRef.current = ref)}
             />
-            <TouchableOpacity style={styles.takePhotoButton} onPress={handleTakePhoto}>
-                <Text style={styles.buttonText}>aperta</Text>
+            <View style={styles.cameraCentro}>
+            <TouchableOpacity style={styles.cameraButton} onPress={handleTakePhoto}>
+                <Entypo name="camera" size={30} color="black" />
             </TouchableOpacity>
+            </View>
         </View>
     );
 }
@@ -61,18 +65,24 @@ const styles = StyleSheet.create({
     camera: {
         flex: 1,
     },
-    takePhotoButton: {
+    cameraButton: {
         position: 'absolute',
-        bottom: 20,
-        left: '50%',
-        transform: [{ translateX: -50 }],
-        backgroundColor: '#212121',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        borderRadius: 8,
+        bottom: 80,
+        backgroundColor: "#2196F3",
+        width: 80,
+        height: 80,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 40,
+        borderColor: '#212121',
+        borderWidth: 3,
     },
     buttonText: {
         fontSize: 16,
         color: '#fff',
     },
+    cameraCentro:{
+        alignItems:'center',
+        top:40,
+    }
 });

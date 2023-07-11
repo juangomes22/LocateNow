@@ -14,10 +14,15 @@ export default function ModalComp({ closeModal, selected, modalVisible }) {
         >
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
-                    <Text style={styles.modalText}>{selected.nome}</Text>
+
+                    <View style={styles.capaModalText}>
+                        <Text style={styles.modalText}>{selected.nome}</Text>
+                    </View>
+                    
                     <Image style={styles.imgSpot} source={selected.imagem} />
-                    <Text style={styles.modalText}>Data da Fundação: {selected.dataFundacao}</Text>
-                    <TouchableOpacity onPress={closeModal}>
+                    <Text style={{ fontSize: 15, marginBottom: 10, fontWeight: "700" }}>Data da Fundação: {selected.dataFundacao}</Text>
+
+                    <TouchableOpacity style={styles.buttonModal} onPress={closeModal}>
                         <Text style={styles.buttonText}>Fechar Modal</Text>
                     </TouchableOpacity>
                 </View>
@@ -26,11 +31,25 @@ export default function ModalComp({ closeModal, selected, modalVisible }) {
     )
 }
 const styles = StyleSheet.create({
+    buttonModal: {
+        backgroundColor: '#9E9E9E',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 150,
+        height: 50,
+        borderRadius: 5,
+        marginTop: 20,
+        borderColor: '#212121',
+        borderWidth: 3,
+        elevation: 40,
+        shadowColor: '#1976D2'
+
+
+    },
     buttonText: {
         fontSize: 15,
         fontWeight: "700",
         color: '#000',
-        marginTop: 90,
     },
     modalContainer: {
         flex: 1,
@@ -50,9 +69,20 @@ const styles = StyleSheet.create({
     },
     modalText: {
         fontSize: 18,
-        marginBottom: 10,
-        fontWeight: "700",
 
+        fontWeight: "700",
+    },
+    capaModalText: {
+        backgroundColor: '#7c7eff',
+        width: 250,
+        height: 40,
+        textAlign: 'center',
+        alignItems: 'center',
+        justifyContent:'center',
+        borderRadius: 60,
+        marginBottom:10,
+        borderWidth:4,
+        borderColor:'#757575'
     },
     imgSpot: {
         width: '90%',
@@ -60,6 +90,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginBottom: 20,
         borderWidth: 5,
-        borderColor: "#4d4d4d"
+        borderColor: "#757575"
+
     }
 });
