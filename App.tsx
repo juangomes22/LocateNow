@@ -8,13 +8,13 @@ import React from "react";
 
 const Stack = createNativeStackNavigator();
 
-export default function App(){
-    return(
-       <NavigationContainer>
-        <Stack.Navigator>
-            <Stack.Screen name="home" component={Home}/>
-            <Stack.Screen name="Camera" component={CameraComp}/>
-        </Stack.Navigator>
-       </NavigationContainer>
-    )
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Camera" component={CameraComp} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 }

@@ -3,36 +3,41 @@ import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
 import { Camera } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
 import { Entypo } from '@expo/vector-icons';
+import * as Location from 'expo-location';
 
+export default function CameraComp({ navigation }) {
+    const [hasPermission, setHasPermission] = useState(null);
+    const [currentLocation, setCurrentLocation] = useState(null);
+    const cameraRef = useRef(null);
 
-export default function CameraComp() {
-    const [hasPermission, setHasPermission] = useState<boolean | null>(null);
-    const cameraRef = useRef<Camera | null>(null);
 
     useEffect(() => {
-        (async () => {
-            const { status } = await Camera.requestCameraPermissionsAsync();
-            setHasPermission(status === 'granted');
-            await MediaLibrary.requestPermissionsAsync()
-        })();
+        getCameraPermission();
+        getLocationAsync();
     }, []);
 
-    if (hasPermission === null) {
-        return <View />;
-    }
+    const getCameraPermission = async () => {
+        const { status } = await Camera.requestCameraPermissionsAsync();
+        setHasPermission(status === 'granted');
+    };
 
-    if (hasPermission === false) {
-        return <Text>No access to camera</Text>;
-    }
+    const getLocationAsync = async () => {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status === 'granted') {
+            const location = await Location.getCurrentPositionAsync({});
+            setCurrentLocation(location.coords);
+        }
+    };
 
     const handleTakePhoto = async () => {
         if (cameraRef.current) {
             const photo = await cameraRef.current.takePictureAsync();
             savePhotoToGallery(photo.uri);
+            navigateToMapScreen(photo);
         }
     };
 
-    const savePhotoToGallery = async (uri: string) => {
+    const savePhotoToGallery = async (uri) => {
         const asset = await MediaLibrary.createAssetAsync(uri);
         const albumExists = await MediaLibrary.getAlbumAsync('My Photos');
 
@@ -43,16 +48,28 @@ export default function CameraComp() {
         }
     };
 
+    const navigateToMapScreen = (photo) => {
+        navigation.goBack({ takenPhoto: { uri: photo.uri, location: currentLocation } });
+    };
+
+    if (hasPermission === null) {
+        return <View />;
+    }
+
+    if (hasPermission === false) {
+        return <Text>No access to camera</Text>;
+    }
+
     return (
         <View style={styles.container}>
             <Camera
                 style={styles.camera}
-                ref={(ref: Camera) => (cameraRef.current = ref)}
+                ref={cameraRef}
             />
             <View style={styles.cameraCentro}>
-            <TouchableOpacity style={styles.cameraButton} onPress={handleTakePhoto}>
-                <Entypo name="camera" size={30} color="black" />
-            </TouchableOpacity>
+                <TouchableOpacity style={styles.cameraButton} onPress={handleTakePhoto}>
+                    <Entypo name="camera" size={30} color="black" />
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -81,8 +98,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#fff',
     },
-    cameraCentro:{
-        alignItems:'center',
-        top:40,
+    cameraCentro: {
+        alignItems: 'center',
+        top: 40,
     }
 });

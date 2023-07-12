@@ -3,12 +3,15 @@ import { TouchableOpacity, StyleSheet, View } from "react-native";
 import { Entypo } from '@expo/vector-icons';
 import ModalComp from "./modalComp";
 import MapComp from "./mapComp";
+import * as Location from 'expo-location';
 
 export default function Home({ navigation }) {
+
   const [modalVisible, setModalVisible] = useState(true);
   const [selectedSpot, setSelectedSpot] = useState(null);
   const [initialRegion, setInitialRegion] = useState(null);
   const [showInitialLocation, setShowInitialLocation] = useState(true);
+  const [currentLocation, setCurrentLocation] = useState(null); // Adicione esta linha
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -23,6 +26,20 @@ export default function Home({ navigation }) {
 
     return () => clearTimeout(timeout);
   }, []);
+  useEffect(() => {
+    getLocationAsync();
+  }, []);
+
+  const getLocationAsync = async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status === 'granted') {
+      const location = await Location.getCurrentPositionAsync({});
+      setCurrentLocation({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
+    }
+  };
 
   const openModal = () => {
     setModalVisible(true);
@@ -36,10 +53,10 @@ export default function Home({ navigation }) {
     setSelectedSpot(spot);
     openModal();
   };
-
+  
   return (
     <View style={styles.container}>
-      <MapComp initialRegion={initialRegion} showInitialLocation={showInitialLocation} handleMarkerPress={handleMarkerPress} openModal={()=>{openModal()}} />
+      <MapComp  initialRegion={initialRegion} showInitialLocation={showInitialLocation} handleMarkerPress={handleMarkerPress} openModal={() => { openModal(); } } takenPhoto={undefined} />
 
       {selectedSpot && (
         <ModalComp closeModal={closeModal} selected={selectedSpot} modalVisible={modalVisible}
