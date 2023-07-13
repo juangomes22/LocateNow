@@ -1,28 +1,18 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, View, Image } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import TouristSpotEntity from "../entities/tourist_spot_entity";
 
 export default function MapComp({
   initialRegion,
-  showInitialLocation,
   handleMarkerPress,
   openModal,
-  takenPhoto,
+  placeList
 }) {
+
+
   return (
     <MapView style={styles.map} region={initialRegion}>
-      {showInitialLocation && initialRegion && (
-        <Marker
-          coordinate={{
-            latitude: initialRegion.latitude,
-            longitude: initialRegion.longitude,
-          }}
-          title="Initial Location"
-        />
-      )}
-
-      {TouristSpotEntity.map((spot, index) => (
+      {placeList.map((spot, index) => (
         <Marker
           key={index}
           coordinate={{ latitude: spot.latitude, longitude: spot.longitude }}
@@ -32,25 +22,13 @@ export default function MapComp({
           <View style={styles.markerContainer}>
             <TouchableOpacity onPress={openModal}>
               <Image
-                source={spot.imagem}
+                source={{uri:spot.imagem}}
                 style={styles.markerImage}
               />
             </TouchableOpacity>
           </View>
         </Marker>
       ))}
-
-      {/* Exibir a imagem do ponto turístico */}
-      {takenPhoto && (
-        <Marker
-          coordinate={{
-            latitude: takenPhoto.location.latitude,
-            longitude: takenPhoto.location.longitude,
-          }}
-        >
-          <Image source={{ uri: takenPhoto.uri }} style={styles.takenPhotoMarker} />
-        </Marker>
-      )}
     </MapView>
   );
 }

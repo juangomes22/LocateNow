@@ -2,44 +2,40 @@ import React, { useEffect, useState } from "react";
 import { TouchableOpacity, StyleSheet, View } from "react-native";
 import { Entypo } from '@expo/vector-icons';
 import ModalComp from "./modalComp";
-import MapComp from "./mapComp";
 import * as Location from 'expo-location';
+import TouristSpotEntity from "../entities/tourist_spot_entity";
+import MapComp from "./mapComp";
 
 export default function Home({ navigation }) {
 
   const [modalVisible, setModalVisible] = useState(true);
   const [selectedSpot, setSelectedSpot] = useState(null);
   const [initialRegion, setInitialRegion] = useState(null);
-  const [showInitialLocation, setShowInitialLocation] = useState(true);
-  const [currentLocation, setCurrentLocation] = useState(null); // Adicione esta linha
+  const [placeList, setPlaceList] = useState(TouristSpotEntity)
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setShowInitialLocation(false);
-      setInitialRegion({
-        latitude: -22.1184, // Latitude de Três Rios
-        longitude: -43.2100, // Longitude de Três Rios
-        latitudeDelta: 0.0150,
-        longitudeDelta: 0.00100,
-      });
-    }, 4000);
+    initMap();
 
-    return () => clearTimeout(timeout);
-  }, []);
-  useEffect(() => {
-    getLocationAsync();
   }, []);
 
-  const getLocationAsync = async () => {
-    const { status } = await Location.requestForegroundPermissionsAsync();
+
+  async function getCurrentLocation(): Promise<Location.LocationObject> {
+    let { status } = await Location.requestForegroundPermissionsAsync();
     if (status === 'granted') {
-      const location = await Location.getCurrentPositionAsync({});
-      setCurrentLocation({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      });
+      let location = await Location.getCurrentPositionAsync({});
+      return location;
     }
-  };
+  }
+
+  async function initMap() {
+    const position = await getCurrentLocation();
+    setInitialRegion({
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+      latitudeDelta: 0.0150,
+      longitudeDelta: 0.00100,
+    })
+  }
 
   const openModal = () => {
     setModalVisible(true);
@@ -53,17 +49,37 @@ export default function Home({ navigation }) {
     setSelectedSpot(spot);
     openModal();
   };
-  
+
+  async function addItem(imageUrl: string) {
+    const position = await getCurrentLocation();
+    console.log(position)
+    let newPlace = {
+      nome: 'Horto Municipal',
+      imagem: imageUrl,
+      dataFundacao: '1 de janeiro de 1985',
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+    }
+    let places = placeList
+    places.push(newPlace)
+    setPlaceList(places)
+    initMap()
+  }
+
   return (
     <View style={styles.container}>
-      <MapComp  initialRegion={initialRegion} showInitialLocation={showInitialLocation} handleMarkerPress={handleMarkerPress} openModal={() => { openModal(); } } takenPhoto={undefined} />
+      <MapComp
+        initialRegion={initialRegion}
+        handleMarkerPress={handleMarkerPress}
+        openModal={() => { openModal() }}
+        placeList={placeList} />
 
       {selectedSpot && (
         <ModalComp closeModal={closeModal} selected={selectedSpot} modalVisible={modalVisible}
         />
       )}
 
-      <TouchableOpacity style={styles.cameraButton} onPress={() => navigation.navigate('Camera')}>
+      <TouchableOpacity style={styles.cameraButton} onPress={() => navigation.navigate('Camera', { addItem: (imageUrl) => addItem(imageUrl) })}>
         <Entypo name="camera" size={30} color="black" />
       </TouchableOpacity>
     </View>
@@ -91,16 +107,20 @@ const styles = StyleSheet.create({
     borderWidth: 3,
   },
   markerContainer: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     overflow: 'hidden',
+    borderWidth: 3,
+    borderColor: 'black',
   },
   markerImage: {
     width: '100%',
     height: '100%',
+  },
+  takenPhotoMarker: {
+    width: 50,
+    height: 50,
     resizeMode: 'cover',
-    borderWidth:6,
-    borderColor:''
   },
 });
