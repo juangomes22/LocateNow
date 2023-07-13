@@ -32,7 +32,7 @@ export default function ModalComp({ closeModal, selected, modalVisible }) {
 }
 const styles = StyleSheet.create({
     buttonModal: {
-        backgroundColor: '#9E9E9E',
+        backgroundColor: '#836FFF',
         alignItems: 'center',
         justifyContent: 'center',
         width: 150,
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
         borderColor: '#212121',
         borderWidth: 3,
         elevation: 40,
-        shadowColor: '#1976D2'
+        shadowColor: '#836FFF'
 
 
     },

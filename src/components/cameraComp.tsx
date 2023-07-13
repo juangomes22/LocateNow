@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     cameraButton: {
         position: 'absolute',
         bottom: 80,
-        backgroundColor: "#2196F3",
+        backgroundColor: "#836FFF",
         width: 80,
         height: 80,
         justifyContent: 'center',
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         fontSize: 16,
-        color: '#fff',
+        color: '#836FFF',
     },
     cameraCentro: {
         alignItems: 'center',
