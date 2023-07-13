@@ -5,7 +5,7 @@ import * as MediaLibrary from 'expo-media-library';
 import { Entypo } from '@expo/vector-icons';
 import * as Location from 'expo-location';
 
-export default function CameraComp({ navigation }) {
+export default function CameraComp({ navigation, route }) {
     const [hasPermission, setHasPermission] = useState(null);
     const [currentLocation, setCurrentLocation] = useState(null);
     const cameraRef = useRef(null);
@@ -13,7 +13,7 @@ export default function CameraComp({ navigation }) {
 
     useEffect(() => {
         getCameraPermission();
-        getLocationAsync();
+   
     }, []);
 
     const getCameraPermission = async () => {
@@ -21,35 +21,30 @@ export default function CameraComp({ navigation }) {
         setHasPermission(status === 'granted');
     };
 
-    const getLocationAsync = async () => {
-        const { status } = await Location.requestForegroundPermissionsAsync();
-        if (status === 'granted') {
-            const location = await Location.getCurrentPositionAsync({});
-            setCurrentLocation(location.coords);
-        }
-    };
+       
 
     const handleTakePhoto = async () => {
         if (cameraRef.current) {
             const photo = await cameraRef.current.takePictureAsync();
             savePhotoToGallery(photo.uri);
-            navigateToMapScreen(photo);
+            route.params.addItem(photo.uri)
+            navigateToMapScreen();
         }
     };
 
     const savePhotoToGallery = async (uri) => {
         const asset = await MediaLibrary.createAssetAsync(uri);
-        const albumExists = await MediaLibrary.getAlbumAsync('My Photos');
+        const albumExists = await MediaLibrary.getAlbumAsync('LocateNow');
 
         if (albumExists) {
             await MediaLibrary.addAssetsToAlbumAsync([asset], albumExists, false);
         } else {
-            const newAlbum = await MediaLibrary.createAlbumAsync('My Photos', asset, false);
+            const newAlbum = await MediaLibrary.createAlbumAsync('LocateNow', asset, false);
         }
     };
 
-    const navigateToMapScreen = (photo) => {
-        navigation.goBack({ takenPhoto: { uri: photo.uri, location: currentLocation } });
+    const navigateToMapScreen = () => {
+        navigation.goBack();
     };
 
     if (hasPermission === null) {

@@ -1,4 +1,4 @@
-import { Modal, View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Modal, View, Text, TouchableOpacity, StyleSheet, TextInput } from "react-native";
 import { Image } from 'expo-image'
 
 
@@ -22,6 +22,10 @@ export default function ModalComp({ closeModal, selected, modalVisible }) {
                     <Image style={styles.imgSpot} source={selected.imagem} />
                     <Text style={{ fontSize: 15, marginBottom: 10, fontWeight: "700" }}>Data da Fundação: {selected.dataFundacao}</Text>
 
+                    <View style={styles.containerInput}> 
+                    <TextInput style={{fontSize:14, fontWeight:"700"}} placeholderTextColor={"#fff"} placeholder="Digite aqui sua opinião sobre esse local..."/> 
+                    </View>
+
                     <TouchableOpacity style={styles.buttonModal} onPress={closeModal}>
                         <Text style={styles.buttonText}>Fechar Modal</Text>
                     </TouchableOpacity>
@@ -42,9 +46,13 @@ const styles = StyleSheet.create({
         borderColor: '#212121',
         borderWidth: 3,
         elevation: 40,
+<<<<<<< HEAD
         shadowColor: '#836FFF'
 
 
+=======
+        shadowColor: '#1976D2'
+>>>>>>> 9e96c607d52589145c13861cbe195de33e953303
     },
     buttonText: {
         fontSize: 15,
@@ -92,5 +100,17 @@ const styles = StyleSheet.create({
         borderWidth: 5,
         borderColor: "#757575"
 
+    },
+    containerInput:{
+    backgroundColor:'#757575',
+    width: '100%',
+    height: 40,
+    justifyContent:'center',
+    alignItems:'center',        
+    borderWidth: 4,
+    borderColor: "#7c7eff",
+    borderRadius: 5,
+    
+    
     }
 });
