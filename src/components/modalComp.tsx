@@ -46,13 +46,9 @@ const styles = StyleSheet.create({
         borderColor: '#212121',
         borderWidth: 3,
         elevation: 40,
-<<<<<<< HEAD
         shadowColor: '#836FFF'
 
 
-=======
-        shadowColor: '#1976D2'
->>>>>>> 9e96c607d52589145c13861cbe195de33e953303
     },
     buttonText: {
         fontSize: 15,

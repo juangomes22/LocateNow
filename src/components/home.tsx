@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
@@ -18,15 +17,7 @@ import * as MediaLibrary from 'expo-media-library';
 import { Keyboard } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-=======
-import React, { useEffect, useState } from "react";
-import { TouchableOpacity, StyleSheet, View } from "react-native";
-import { Entypo } from '@expo/vector-icons';
-import ModalComp from "./modalComp";
-import * as Location from 'expo-location';
-import TouristSpotEntity from "../entities/tourist_spot_entity";
-import MapComp from "./mapComp";
->>>>>>> 9e96c607d52589145c13861cbe195de33e953303
+
 
 const App = () => {
   const [markers, setMarkers] = useState([]);
@@ -39,7 +30,6 @@ const App = () => {
   const [markerDescription, setMarkerDescription] = useState('');
   const [cameraType, setCameraType] = useState(Camera.Constants.Type['back']);
 
-<<<<<<< HEAD
   
   const handleDeleteConfirmation = () => {
     Alert.alert(
@@ -51,9 +41,6 @@ const App = () => {
       ]
     );
   };
-
-
-  
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
@@ -71,35 +58,7 @@ const App = () => {
       console.log('Permissão de localização não concedida');
     } else {
       getCurrentLocation();
-=======
-  const [modalVisible, setModalVisible] = useState(true);
-  const [selectedSpot, setSelectedSpot] = useState(null);
-  const [initialRegion, setInitialRegion] = useState(null);
-  const [placeList, setPlaceList] = useState(TouristSpotEntity)
-
-  useEffect(() => {
-    initMap();
-
-  }, []);
-
-
-  async function getCurrentLocation(): Promise<Location.LocationObject> {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status === 'granted') {
-      let location = await Location.getCurrentPositionAsync({});
-      return location;
->>>>>>> 9e96c607d52589145c13861cbe195de33e953303
     }
-  }
-
-  async function initMap() {
-    const position = await getCurrentLocation();
-    setInitialRegion({
-      latitude: position.coords.latitude,
-      longitude: position.coords.longitude,
-      latitudeDelta: 0.0150,
-      longitudeDelta: 0.00100,
-    })
   }
 
   const getCurrentLocation = async () => {
@@ -200,7 +159,6 @@ const App = () => {
     dismissKeyboard();
   };
 
-<<<<<<< HEAD
   const toggleCameraType = () => {
     setCameraType((prevType) =>
       prevType === Camera.Constants.Type['back']
@@ -278,6 +236,12 @@ const App = () => {
                 value={markerTitle}
                 onChangeText={setMarkerTitle}
               />
+               <TextInput
+                style={styles.input}
+                placeholder="Descrição"
+                value={markerDescription}
+                onChangeText={setMarkerDescription}
+              />
               
               <View style={{flexDirection:'row' , justifyContent:'space-between'}}>
                 <Button title="Salvar" onPress={handleSaveMarker} />
@@ -287,40 +251,6 @@ const App = () => {
           </View>
         </TouchableOpacity>
       </Modal>
-=======
-  async function addItem(imageUrl: string) {
-    const position = await getCurrentLocation();
-    console.log(position)
-    let newPlace = {
-      nome: 'Horto Municipal',
-      imagem: imageUrl,
-      dataFundacao: '1 de janeiro de 1985',
-      latitude: position.coords.latitude,
-      longitude: position.coords.longitude,
-    }
-    let places = placeList
-    places.push(newPlace)
-    setPlaceList(places)
-    initMap()
-  }
-
-  return (
-    <View style={styles.container}>
-      <MapComp
-        initialRegion={initialRegion}
-        handleMarkerPress={handleMarkerPress}
-        openModal={() => { openModal() }}
-        placeList={placeList} />
-
-      {selectedSpot && (
-        <ModalComp closeModal={closeModal} selected={selectedSpot} modalVisible={modalVisible}
-        />
-      )}
-
-      <TouchableOpacity style={styles.cameraButton} onPress={() => navigation.navigate('Camera', { addItem: (imageUrl) => addItem(imageUrl) })}>
-        <Entypo name="camera" size={30} color="black" />
-      </TouchableOpacity>
->>>>>>> 9e96c607d52589145c13861cbe195de33e953303
     </View>
   );
 };
@@ -339,7 +269,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 320,
   },
-<<<<<<< HEAD
   buttonContainer: {
     position: 'absolute',
     bottom: 40,
@@ -412,24 +341,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
-=======
-  markerContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    overflow: 'hidden',
-    borderWidth: 3,
-    borderColor: 'black',
-  },
-  markerImage: {
-    width: '100%',
-    height: '100%',
-  },
-  takenPhotoMarker: {
-    width: 50,
-    height: 50,
-    resizeMode: 'cover',
->>>>>>> 9e96c607d52589145c13861cbe195de33e953303
   },
 });
 
