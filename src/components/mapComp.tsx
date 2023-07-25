@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import {
-  StyleSheet,
-  TouchableHighlight,
-  View,
-  Modal,
-  Text,
-  Image,
-} from 'react-native';
+import {StyleSheet,TouchableHighlight, View, Modal,Text,Image,} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import * as ImagePicker from 'expo-image-picker';
+
 
 export default function HomePage({ navigation }) {
   const [markers, setMarkers] = useState([

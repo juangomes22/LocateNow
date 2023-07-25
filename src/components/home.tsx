@@ -1,15 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Text,
-  Modal,
-  TextInput,
-  Button,
-  Image,
-  Alert,
-} from 'react-native';
+import {View, StyleSheet, TouchableOpacity,Text, Modal,TextInput,Button,Image, Alert,} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { Camera } from 'expo-camera';
@@ -17,6 +7,10 @@ import * as MediaLibrary from 'expo-media-library';
 import { Keyboard } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import { onValue } from 'firebase/database';
+import { db } from '../../firebase-config';
+
+
 
 
 const App = () => {
@@ -29,6 +23,16 @@ const App = () => {
   const [markerTitle, setMarkerTitle] = useState('');
   const [markerDescription, setMarkerDescription] = useState('');
   const [cameraType, setCameraType] = useState(Camera.Constants.Type['back']);
+  
+  async function getPlaces() {
+    return onValue(ref(db,'/places'),(snapshot)=>{
+      console.log('Dados do Realtime' ,snapshot);
+      
+    })
+  }
+
+
+  
 
   
   const handleDeleteConfirmation = () => {
@@ -55,7 +59,7 @@ const App = () => {
   const getLocationPermission = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
-      console.log('Permissão de localização não concedida');
+      console.log('Permissão de localização concedida');
     } else {
       getCurrentLocation();
     }
@@ -345,3 +349,7 @@ const styles = StyleSheet.create({
 });
 
 export default App;
+function ref(db: any, arg1: string): import("@firebase/database").Query {
+  throw new Error('Function not implemented.');
+}
+
