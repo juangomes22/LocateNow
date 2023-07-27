@@ -1,48 +1,46 @@
 import React, { useEffect, useState } from 'react';
-import {StyleSheet,TouchableHighlight, View, Modal,Text,Image,} from 'react-native';
+import { StyleSheet, TouchableHighlight, View, Modal, Text, Image, } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import * as ImagePicker from 'expo-image-picker';
+import PlaceEntity from '../entities/place-entity';
+import { onValue, ref } from 'firebase/database';
+import { db } from '../../firebase-config';
 
 
 export default function HomePage({ navigation }) {
-  const [markers, setMarkers] = useState([
-    {
-      id: 1,
-      description: 'Praça São Sebastião',
-      data: 'Construída em 1912',
-      latitude: -22.1166235,
-      longitude: -43.2099970,
-      images:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXVrTAr0TGmpk5-PdlxqeTltHruaygMHRZkQ&usqp=CAU',
-    },
-    {
-      id: 2,
-      description: 'Praça da Autonomia',
-      data: 'Construída no século XIX',
-      latitude: -22.1151987,
-      longitude: -43.2066421,
-      images:
-        'https://www.guiadoturismobrasil.com/up/img/1443895061.jpg',
-    },
-    {
-      id: 3,
-      description: 'Viaduto',
-      data: 'Inaugurado em 2007',
-      latitude: -22.1183,
-      longitude: -43.2095,
-      images:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5Og8LUNqMcbbNXKkV55mTCqFSwEyM0FbeUk1WGbYzvl2Cwea7e3hNJL9s-oU5CVjUQA4&usqp=CAU',
-    },
-
-  ]);
+  const [markers, setMarkers] = useState<PlaceEntity[]>([]);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedMarker, setSelectedMarker] = useState(null);
 
+  async function getPlaces() {
+    console.log('Firebase');
+    return onValue(ref(db, '/places'), (snapshot) => {
+      try {
+        console.log(snapshot);
+        setMarkers([]);
+        if (snapshot! == undefined) {
+          snapshot.forEach((childSnapshot) => {
+
+            const childKey = childSnapshot.key;
+
+            let childValue = childSnapshot.val();
+            childValue.id = childKey
+            setMarkers((places) => [...places, (childValue as PlaceEntity)])
+
+          })
+        }
+      }
+      catch (e) {
+        console.log(e);
+      }
+    })
+  };
   useEffect(() => {
     getLocationPermission();
+    getPlaces();
   }, []);
 
   const getLocationPermission = async () => {
@@ -80,25 +78,25 @@ export default function HomePage({ navigation }) {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
-        showsUserLocation={true} 
+        showsUserLocation={true}
       >
         {markers.map((item) => {
           return (
             <Marker
               key={item.id}
-              coordinate={{ latitude: item.latitude, longitude: item.longitude }}
+              coordinate={{ latitude: item.coords.latitude, longitude: item.coords.longitude }}
               description={item.description}
               onPress={() => openModal(item)}
             >
               <View style={{ overflow: 'hidden', borderRadius: 45 }}>
-                <Image style={styles.img} source={{ uri: item.images }} />
+                <Image style={styles.img} source={{ uri: item.imagePath }} />
               </View>
             </Marker>
           );
         })}
       </MapView>
 
-    
+
 
       <Modal
         animationType="slide"
@@ -111,7 +109,7 @@ export default function HomePage({ navigation }) {
             <View style={styles.modalContent}>
               <Text style={styles.modalDescription}>{selectedMarker.description}</Text>
               <Image style={styles.modalImage} source={{ uri: selectedMarker.images }} />
-              
+
               <Text style={styles.modalData}>{selectedMarker.data}</Text>
               <TouchableHighlight style={styles.modalButton} onPress={closeModal}>
                 <Text style={styles.modalButtonText}>Fechar</Text>
@@ -154,12 +152,12 @@ const styles = StyleSheet.create({
     height: 300,
     marginBottom: 10,
     borderRadius: 10,
-    
+
   },
   modalDescription: {
     fontSize: 20,
-    alignItems:'center',
-    justifyContent:'center',
+    alignItems: 'center',
+    justifyContent: 'center',
     fontWeight: 'bold',
     marginBottom: 5,
   },

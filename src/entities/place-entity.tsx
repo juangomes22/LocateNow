@@ -4,4 +4,5 @@ export default class PlaceEntity {
     coords:{latitude:number, longitude:number};
     description: string;
     photoDate: string;
+    title: string;
 }
