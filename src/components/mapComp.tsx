@@ -6,7 +6,7 @@ import * as Location from 'expo-location';
 import * as ImagePicker from 'expo-image-picker';
 import PlaceEntity from '../entities/place-entity';
 import { onValue, ref } from 'firebase/database';
-import { db } from '../../firebase-config';
+import { db } from '../../firebase-config_alternativo(2)';
 
 
 export default function HomePage({ navigation }) {

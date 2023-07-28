@@ -7,8 +7,8 @@ import * as MediaLibrary from 'expo-media-library';
 import { Keyboard } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-import { onValue, push, ref } from 'firebase/database';
-import { db } from '../../firebase-config';
+import { onValue, push, ref, update } from 'firebase/database';
+import { db } from '../../firebase-config_alternativo(2)';
 import PlaceEntity from '../entities/place-entity';
 
 
@@ -24,6 +24,7 @@ const App = () => {
   const [markerTitle, setMarkerTitle] = useState('');
   const [markerDescription, setMarkerDescription] = useState('');
   const [cameraType, setCameraType] = useState(Camera.Constants.Type['back']);
+  const [placeDescription, setPlaceDescription] = useState('');
 
   const handleDeleteConfirmation = () => {
     Alert.alert(
@@ -57,7 +58,14 @@ const App = () => {
         console.log(e);
       }
     })
+    async function updateItem() {
+      update(ref(db, '/places/' + setCurrentLocation),setCurrentLocation );
+      setShowDialog({ showDialog:false });
+      setPlaceDescription('');
+  }
   };
+
+
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
@@ -265,6 +273,7 @@ const App = () => {
                 placeholder="Título"
                 value={markerTitle}
                 onChangeText={setMarkerTitle}
+                
               />
               <TextInput
                 style={styles.input}
@@ -376,4 +385,12 @@ const styles = StyleSheet.create({
 
 export default App;
 
+
+function setShowDialog(arg0: { showDialog: boolean; }) {
+  throw new Error('Function not implemented.');
+}
+
+function setPlaceDescription(arg0: string) {
+  throw new Error('Function not implemented.');
+}
 

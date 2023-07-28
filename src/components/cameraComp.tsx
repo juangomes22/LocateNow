@@ -5,7 +5,7 @@ import * as MediaLibrary from 'expo-media-library';
 import { Entypo } from '@expo/vector-icons';
 import * as Location from 'expo-location';
 import { getDownloadURL, getStorage, ref, uploadBytes } from "@firebase/storage";
-import { app } from "../../firebase-config";
+import { app } from "../../firebase-config_alternativo(2)";
 
 
 export default function CameraComp({ navigation, route }) {
